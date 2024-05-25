@@ -1,6 +1,8 @@
 package com.example.demo.Product;
 
 import com.example.demo.Product.Model.Product;
+import com.example.demo.Product.queryHandlers.GetAllProductsQueryHandler;
+import com.example.demo.Product.queryHandlers.GetProductQueryHandler;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,14 +27,21 @@ public class ProductController {
     private ProductRepository productRepository;
     // This allows us to access the repository in the controllers (methods) below.
 
+    // Lecture - 7
+    @Autowired
+    private GetAllProductsQueryHandler getAllProductsQueryHandler;
+
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok(productRepository.findAll());
+        // return ResponseEntity.ok(productRepository.findAll());
         // This is the easiest thing to get all the records in the table.
         // Typically in real life it isnt the case, but we are learning.
+
+        // Lecture - 7
+        return getAllProductsQueryHandler.execute(null);
     }
 
-    @GetMapping("/{id}") // We are specifying how to add / we are expecting the id after the end point.
+    // @GetMapping("/{id}") // We are specifying how to add / we are expecting the id after the end point.
     // And we have to add a parameter in the function as well, which passes the
     // value from the end point.
     // The name/spelling of the parameter specified in both places, i.e, GetMapping
@@ -47,11 +56,23 @@ public class ProductController {
     // what if the product is not found (nullable)? then what should the method
     // findById
     // return? It should return an Optional.
-    public ResponseEntity<Optional<Product>> getProduct(@PathVariable Integer id) {
-        return ResponseEntity.ok(productRepository.findById(id));
-        // This will currently return null which is not a good way to handle,
-        // we should send a custom exception instead, with a good specific message,
-        // which would be done later.
+//    public ResponseEntity<Optional<Product>> getProduct(@PathVariable Integer id) {
+//        return ResponseEntity.ok(productRepository.findById(id));
+//        // This will currently return null which is not a good way to handle,
+//        // we should send a custom exception instead, with a good specific message,
+//        // which would be done later.
+//    }
+
+    // Lecture - 8 : Query Handler 2
+
+    @Autowired
+    private GetProductQueryHandler getProductQueryHandler;
+
+    // Now we are better accounting it and refactoring it for Optional.
+    // So basically we have removed optional here, see above commented code.
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Integer id) {
+        return getProductQueryHandler.execute(id);
     }
 
     // Lecture - 5: POST, PUT and DELETE MAPPING
@@ -88,6 +109,7 @@ public class ProductController {
 
         return ResponseEntity.ok().build();
     }
+
 }
 
 // Lecture - 1,2,3
@@ -109,4 +131,3 @@ public class ProductController {
 //
 // // Moved our product controller in the product folder.
 //
-// }
