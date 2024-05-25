@@ -10,3 +10,5 @@ CREATE TABLE product (
     quantity int
 );
 
+select * from product;
+

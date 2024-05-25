@@ -3,7 +3,7 @@ package com.example.demo.Product.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
+@Entity // Used to tell Java to map this entity(object) with the database.
 @Data // This automatically creates our getters and setters using LOMBOK.
 @Table(name="product") // This tells it exactly which table to use exactly.
 // (used Jakarta Persistence (import) from dropdown if asked)
@@ -18,7 +18,7 @@ public class Product {
     @Column(name="description")
     private String description;
     @Column(name="price")
-    private Integer price;
+    private Double price;
     @Column(name="quantity")
     private Integer quantity;
 }
