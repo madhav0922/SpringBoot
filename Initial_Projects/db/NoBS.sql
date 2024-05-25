@@ -2,6 +2,7 @@
 
 use nobs;
 
+/*
 CREATE TABLE product (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
@@ -9,6 +10,7 @@ CREATE TABLE product (
     price double,
     quantity int
 );
+*/
 
 select * from product;
 

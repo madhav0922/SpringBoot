@@ -1,6 +1,10 @@
 package com.example.demo.Product;
 
 import com.example.demo.Product.Model.Product;
+import com.example.demo.Product.Model.UpdateProductCommand;
+import com.example.demo.Product.commandHandlers.CreateProductCommandHandler;
+import com.example.demo.Product.commandHandlers.DeleteProductCommandHandler;
+import com.example.demo.Product.commandHandlers.UpdateProductCommandHandler;
 import com.example.demo.Product.queryHandlers.GetAllProductsQueryHandler;
 import com.example.demo.Product.queryHandlers.GetProductQueryHandler;
 import org.apache.coyote.Response;
@@ -75,39 +79,67 @@ public class ProductController {
         return getProductQueryHandler.execute(id);
     }
 
-    // Lecture - 5: POST, PUT and DELETE MAPPING
+//    // Lecture - 5: POST, PUT and DELETE MAPPING
+//    @PostMapping
+//    // @RequestBody will tell that in the HTTP request body look for a product.
+//    public ResponseEntity createProduct(@RequestBody Product product) {
+//        // Accept a product through JSON
+//        // Convert it to a Product
+//        // Save it in the database
+//        productRepository.save(product); // Currently we do not have any data validation.
+//        return ResponseEntity.ok().build(); // This wont return anything in the body for now. Only returns a 200
+//                                            // response code.
+//    }
+
+    // Lecture 9 : Command Handler
+    @Autowired
+    private CreateProductCommandHandler createProductCommandHandler;
     @PostMapping
     // @RequestBody will tell that in the HTTP request body look for a product.
-    public ResponseEntity createProduct(@RequestBody Product product) {
-        // Accept a product through JSON
-        // Convert it to a Product
-        // Save it in the database
-        productRepository.save(product); // Currently we do not have any data validation.
-        return ResponseEntity.ok().build(); // This wont return anything in the body for now. Only returns a 200
-                                            // response code.
+    public ResponseEntity<String> createProduct(@RequestBody Product product) {
+        return createProductCommandHandler.execute(product);
     }
 
     // PUT is kind of a combination of GET AND POST.
+//    @PutMapping("/{id}")
+//    public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+//        // We would require the id to update the product
+//        // Again we are not doing any validation here.
+//        // We are doing this id thing manually just to see. We could have passed the ID
+//        // in the product itself.
+//        product.setId(id); // Helps set the id so that retrieval / update becomes easy.
+//        productRepository.save(product); // updates the given product for the id set above.
+//        return ResponseEntity.ok().build();
+//    }
+
+    // Lecture 10 : Command Handler 2
+    @Autowired
+    UpdateProductCommandHandler updateProductCommandHandler;
     @PutMapping("/{id}")
     public ResponseEntity updateProduct(@PathVariable Integer id, @RequestBody Product product) {
-        // We would require the id to update the product
-        // Again we are not doing any validation here.
-        // We are doing this id thing manually just to see. We could have passed the ID
-        // in the product itself.
-        product.setId(id); // Helps set the id so that retrieval / update becomes easy.
-        productRepository.save(product); // updates the given product for the id set above.
-        return ResponseEntity.ok().build();
+        UpdateProductCommand updateProductCommand = new UpdateProductCommand(id, product);
+        return updateProductCommandHandler.execute(updateProductCommand);
     }
 
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity deleteProduct(@PathVariable Integer id) {
+//        Product product = productRepository.findById(id).get();
+//        productRepository.delete(product);
+//
+//        // OR..
+//        // productRepository.deleteById(id);
+//
+//        return ResponseEntity.ok().build();
+//    }
+
+    // Lecture 11 : Command Handler 3
+    @Autowired
+    private DeleteProductCommandHandler deleteProductCommandHandler;
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable Integer id) {
-        Product product = productRepository.findById(id).get();
-        productRepository.delete(product);
-
-        // OR..
-        // productRepository.deleteById(id);
-
-        return ResponseEntity.ok().build();
+        // Not fully done yet as we have not handled the Optional (nullable) yet... in case we don't find the product with the given id.
+        // It'd be done in further classes with custom exception...
+        return deleteProductCommandHandler.execute(id);
     }
 
 }
