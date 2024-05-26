@@ -15,6 +15,7 @@ public class DeleteProductCommandHandler implements Command<Integer, ResponseEnt
     @Override
     public ResponseEntity<ResponseEntity> execute(Integer id) {
         Product product = productRepository.getReferenceById(id);
+        // or Product product = productRepository.findById(id).get();
         productRepository.delete(product);
         return ResponseEntity.ok().build();
     }
