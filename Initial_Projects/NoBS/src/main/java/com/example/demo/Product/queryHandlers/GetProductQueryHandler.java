@@ -1,5 +1,6 @@
 package com.example.demo.Product.queryHandlers;
 
+import com.example.demo.Exceptions.ProductNotFoundException;
 import com.example.demo.Product.Model.Product;
 import com.example.demo.Product.Model.ProductDTO;
 import com.example.demo.Product.ProductRepository;
@@ -21,7 +22,9 @@ public class GetProductQueryHandler implements Query<Integer, ProductDTO> {
         Optional<Product> product = productRepository.findById(id); // This basically says the same thing, if we found it then okay otherwise we'll throw an exception.
         if(product.isEmpty()) {
             // Here we throw the exception (generic for now)
-            throw new RuntimeException("Product not found.");
+            // throw new RuntimeException("Product not found.");
+            // Lecture 15: Exception Handling - Part 2 - Custom Exception
+            throw new ProductNotFoundException();
         } else {
             // Lecture 13 - DTOs - Changed from returning a Product to a ProductDTO
             return ResponseEntity.ok(new ProductDTO(product.get()));

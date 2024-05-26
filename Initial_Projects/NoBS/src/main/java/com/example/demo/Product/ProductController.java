@@ -1,5 +1,6 @@
 package com.example.demo.Product;
 
+import com.example.demo.Exceptions.ProductNotFoundException;
 import com.example.demo.Product.Model.Product;
 import com.example.demo.Product.Model.ProductDTO;
 import com.example.demo.Product.Model.UpdateProductCommand;
@@ -103,4 +104,12 @@ public class ProductController {
         // It'd be done in further classes with custom exception...
         return deleteProductCommandHandler.execute(id);
     }
+
+    // Lecture 15: Exception Handling - Part 2 - Custom Exception at controller level
+    // moved to GlobalExceptionHandler in Lecture 16
+//    @ExceptionHandler(ProductNotFoundException.class)
+//    public ResponseEntity<String> handleProductNotFoundException() {
+//        return ResponseEntity.status(404).body("Product not found.");
+//    }
+
 }

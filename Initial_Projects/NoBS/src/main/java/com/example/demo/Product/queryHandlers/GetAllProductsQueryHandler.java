@@ -31,5 +31,9 @@ public class GetAllProductsQueryHandler implements Query<Void, List<ProductDTO>>
                 .map(ProductDTO::new)
                 .toList();
         return ResponseEntity.ok(productDTOs);
+        // Lecture 15: Exception Handling - Part 2 - Custom Exception
+        // Since this is returning a list of products and not a single product
+        // We are not returning any exception here since it'd be returning an empty list []
+        // in case no product(s) exist in the repository.
     }
 }

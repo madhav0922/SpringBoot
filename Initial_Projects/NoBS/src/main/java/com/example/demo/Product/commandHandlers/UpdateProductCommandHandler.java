@@ -1,6 +1,7 @@
 package com.example.demo.Product.commandHandlers;
 
 import com.example.demo.Command;
+import com.example.demo.Exceptions.ProductNotFoundException;
 import com.example.demo.Product.Model.Product;
 import com.example.demo.Product.Model.UpdateProductCommand;
 import com.example.demo.Product.ProductRepository;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Service
 public class UpdateProductCommandHandler implements Command<UpdateProductCommand, ResponseEntity> {
 
@@ -16,6 +20,12 @@ public class UpdateProductCommandHandler implements Command<UpdateProductCommand
     private ProductRepository productRepository;
     @Override
     public ResponseEntity execute(UpdateProductCommand command) {
+        // Lecture 15: Exception Handling - Part 2 - Custom Exception
+        // Handling it using Optional
+        Optional<Product> optionalProduct = productRepository.findById(command.getId());
+        if(optionalProduct.isEmpty()) {
+            throw new ProductNotFoundException();
+        }
         Product product = command.getProduct();
         // validate product
         checkValidation(product);

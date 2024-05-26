@@ -1,6 +1,7 @@
 package com.example.demo.Product.commandHandlers;
 
 import com.example.demo.Command;
+import com.example.demo.Exceptions.ProductNotValidException;
 import com.example.demo.Product.Model.Product;
 import com.example.demo.Product.ProductRepository;
 import io.micrometer.common.util.StringUtils;
@@ -27,21 +28,23 @@ public class CreateProductCommandHandler implements Command<Product, String> {
     }
 
     private void checkValidation(Product product) {
+        // Lecture 16: Exception Handling - Part 3 - Custom Exception handling globally
+        // Changed the RunTimeException to ProductNotValidException after the creation of global classes.
         // name
         if (StringUtils.isBlank(product.getName())) { // micrometer utils... check import
-            throw new RuntimeException("Product name cannot be empty");
+            throw new ProductNotValidException("Product name cannot be empty");
         }
         // description
         if(StringUtils.isBlank(product.getDescription())) {
-            throw new RuntimeException("Description cannot be empty");
+            throw new ProductNotValidException("Product description cannot be empty");
         }
         // price
         if(product.getPrice() <= 0.0) {
-            throw new RuntimeException("Price cannot be negative or 0");
+            throw new ProductNotValidException("Product price cannot be negative or 0");
         }
         // quantity
         if(product.getQuantity() <= 0) {
-            throw new RuntimeException("Quantity cannot be negative or 0");
+            throw new ProductNotValidException("Product quantity cannot be negative or 0");
         }
     }
 }
