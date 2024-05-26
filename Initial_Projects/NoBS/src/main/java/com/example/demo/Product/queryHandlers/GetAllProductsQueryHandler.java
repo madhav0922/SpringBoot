@@ -1,6 +1,7 @@
 package com.example.demo.Product.queryHandlers;
 
 import com.example.demo.Product.Model.Product;
+import com.example.demo.Product.Model.ProductDTO;
 import com.example.demo.Product.ProductRepository;
 import com.example.demo.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,22 @@ import java.util.List;
 @Service // This tell Spring Boot that this is our business logic.
 // Now we are implementing our interface.
 // This does not require an input hence the input is Void.
-public class GetAllProductsQueryHandler implements Query<Void, List<Product>> {
+// Lecture 13 : DTOs
+// We are changing return type from Product to ProductDTO
+public class GetAllProductsQueryHandler implements Query<Void, List<ProductDTO>> {
 
     @Autowired // allows us to inject the product repository and access it in the query Handler.
     private ProductRepository productRepository;
 
+    // Lecture 13 : DTOs
+    // We are changing return type from Product to ProductDTO
     @Override
-    public ResponseEntity<List<Product>> execute(Void input) {
-        return ResponseEntity.ok(productRepository.findAll());
+    public ResponseEntity<List<ProductDTO>> execute(Void input) {
+        List<ProductDTO> productDTOs = productRepository
+                .findAll()
+                .stream()
+                .map(ProductDTO::new)
+                .toList();
+        return ResponseEntity.ok(productDTOs);
     }
 }
